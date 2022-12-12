@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/post")
+@RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
@@ -31,6 +31,5 @@ public class PostController {
 
         return postService.updatePost(id, requestDto);
     }
-
 
 }
