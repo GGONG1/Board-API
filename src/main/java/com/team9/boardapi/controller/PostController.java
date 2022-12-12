@@ -13,6 +13,7 @@ public class PostController {
 
     private final PostService postService;
 
+
     @PostMapping("")
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto){
 
