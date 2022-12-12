@@ -19,4 +19,10 @@ public class PostController {
         return postService.createPost(requestDto);
     }
 
+    @PatchMapping("/{id}")
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto){
+
+        return postService.updatePost(id, requestDto);
+    }
+
 }

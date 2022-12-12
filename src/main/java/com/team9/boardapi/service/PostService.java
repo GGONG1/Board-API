@@ -20,4 +20,13 @@ public class PostService {
 
         return new PostResponseDto(post);
     }
+
+    public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
+        Post post = postRepository.findById(id).orElseThrow(
+
+        );
+        post.update(requestDto.getTitle(), requestDto.getContent());
+        postRepository.save(post);
+        return new PostResponseDto(post);
+    }
 }
