@@ -20,7 +20,6 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class JwtUtil {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
-
+    
     //Header에서 Token을 가져오기
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -77,6 +76,7 @@ public class JwtUtil {
 
     //토큰 검증
     public boolean validateToken(String token) {
+    
         try {
             //setSigningKey쪽에다가 우리가 token을 만들 때 사용한 키를 넣어주고 어떠한 토큰에 검증을 할건지를 parseClaimsJws()부분에 토큰을 넣어주면 내부적으로 토큰을 검증을 해준다.
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

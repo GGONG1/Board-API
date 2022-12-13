@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             setAuthentication(info.getSubject()); //setAuthentication함수로 정보의 Subject안에 들어있는 (우리는 username을 넣어놓음) 유저네임을 받는다.
         }
         filterChain.doFilter(request,response);
-
     }
 
     public void setAuthentication(String username) {

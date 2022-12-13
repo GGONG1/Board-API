@@ -2,6 +2,7 @@ package com.team9.boardapi.controller;
 
 import com.team9.boardapi.dto.LoginRequestDto;
 import com.team9.boardapi.dto.SignupRequestDto;
+
 import com.team9.boardapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,4 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return userService.login(loginRequestDto,response);
     }
-
-
-
 }

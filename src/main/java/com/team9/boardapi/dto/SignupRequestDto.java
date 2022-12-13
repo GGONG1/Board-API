@@ -2,7 +2,6 @@ package com.team9.boardapi.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -20,5 +19,4 @@ public class SignupRequestDto {
 
     //관리자일때 넣어줘야하는 토큰값
     private String adminToken = "";
-
 }

@@ -21,6 +21,7 @@ public class UserDetailsImpl implements UserDetails {
         this.username = username;
     }
 
+
     //인증완료된 User 갖고오기
     public User getUser() {
         return user;
@@ -31,14 +32,13 @@ public class UserDetailsImpl implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         UserRoleEnum role = user.getRole();
         String authority = role.getAuthority();
-
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(simpleGrantedAuthority);
 
         return authorities;
     }
-
+    
     //사용자의 username, password Getter
     @Override
     public String getUsername() {
@@ -69,5 +69,4 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
-
 }
