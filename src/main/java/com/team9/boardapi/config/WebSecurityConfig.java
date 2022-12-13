@@ -38,7 +38,6 @@ public class WebSecurityConfig {
         //h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console());
-//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     //Session방식 말고 JWT 방식을 사용하기 위한 설정
@@ -56,15 +55,6 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-//        http.formLogin().loginPage("/api/user/login-page").permitAll();
-
-//        // 401 Error 처리, Authorization 즉, 인증과정에서 실패할 시 처리
-//        http.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
-//
-//        // 403 Error 처리, 인증과는 별개로 추가적인 권한이 충족되지 않는 경우
-//        http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
-
 
         return http.build();
     }

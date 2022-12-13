@@ -1,6 +1,5 @@
 package com.team9.boardapi.dto;
 
-import com.team9.boardapi.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.Setter;
 

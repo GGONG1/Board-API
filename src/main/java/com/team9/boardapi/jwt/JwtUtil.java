@@ -1,4 +1,4 @@
-package com.team9.boardapi.jwt;//package com.team9.boardapi.jwt;
+package com.team9.boardapi.jwt;
 
 import com.team9.boardapi.entity.UserRoleEnum;
 import com.team9.boardapi.security.UserDetailsServiceImpl;
@@ -43,11 +43,9 @@ public class JwtUtil {
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     //DI가 이루어지고 난 후에 초기화 하는 메서드
-
     @PostConstruct
     public void init() {
         //base64로 인코딩이 되어 있기 때문에 secretkey값을 가지고 와서 decode하는 과정
-
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }

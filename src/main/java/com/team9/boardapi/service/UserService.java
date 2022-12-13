@@ -1,7 +1,6 @@
 package com.team9.boardapi.service;
 
 import com.team9.boardapi.dto.LoginRequestDto;
-import com.team9.boardapi.dto.ResponseDto;
 import com.team9.boardapi.dto.SignupRequestDto;
 import com.team9.boardapi.entity.User;
 import com.team9.boardapi.entity.UserRoleEnum;
