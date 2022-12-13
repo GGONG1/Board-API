@@ -27,17 +27,15 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private Long userid;
 
-    @OneToMany(mappedBy = "Id")
+    @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
-
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
-
+//    @ManyToOne
+//    @JoinColumn(name = "USER_ID", nullable = false)
+//    private User user;
 
     public Post(PostRequestDto requestDto){
-        //this.userid = requestDto.getUserId();
+        this.userid = requestDto.getUserId();
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
     }
@@ -46,6 +44,4 @@ public class Post extends Timestamped{
         this.title = title;
         this.content = content;
     }
-
-
 }

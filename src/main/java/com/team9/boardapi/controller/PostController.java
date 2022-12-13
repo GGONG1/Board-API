@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
@@ -17,9 +19,23 @@ public class PostController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> read(@PathVariable Long id){
+    public ResponseEntity<PostResponseDto> read(@PathVariable Long id){
         return postService.getPost(id);
     }
+
+
+    @GetMapping("")
+    public ResponseEntity<List<PostResponseDto>> readAll(){
+
+        return postService.getPostList();
+    }
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable Long id){
+
+        return postService.deletePost(id);
+    }
+
+
     @PostMapping("")
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto){
 
