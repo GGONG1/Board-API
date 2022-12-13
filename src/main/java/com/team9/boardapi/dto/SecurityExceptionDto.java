@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class SecurityExceptionDto {
+
     private int statusCode;
     private String msg;
 

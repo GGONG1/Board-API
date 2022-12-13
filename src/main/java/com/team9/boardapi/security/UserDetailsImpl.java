@@ -11,7 +11,9 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
+    //인증 완료된 User
     private final User user;
+    //인증 완료된 username
     private final String username;
 
     public UserDetailsImpl(User user, String username) {
@@ -19,10 +21,13 @@ public class UserDetailsImpl implements UserDetails {
         this.username = username;
     }
 
+
+    //인증완료된 User 갖고오기
     public User getUser() {
         return user;
     }
 
+    //사용자의 권한을 Grantedauthority로 추상화해서 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         UserRoleEnum role = user.getRole();
@@ -33,14 +38,15 @@ public class UserDetailsImpl implements UserDetails {
 
         return authorities;
     }
-
+    
+    //사용자의 username, password Getter
     @Override
-    public String getPassword() {
-        return null;
+    public String getUsername() {
+        return this.username;
     }
 
     @Override
-    public String getUsername() {
+    public String getPassword() {
         return null;
     }
 
