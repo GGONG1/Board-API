@@ -15,21 +15,14 @@ public class Comment extends Timestamped{
     private Long id;
 
     @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private Long userId;
 
     @Column(nullable = false)
     private Long postId;
 
+    // cascade는 왜 위험한가? 나중에 자세히 알아보자
+    // 댓글이 삭제되면 좋아요도 함께 삭제 부탁드립니다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
-
-//    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-//    private List<CommentLike> commentLikeList = new ArrayList<>();
 }
