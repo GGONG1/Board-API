@@ -56,7 +56,6 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<String> deletePost(Long id) {
-        System.out.println("삭제 시작");
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 글을 찾을 수 없습니다.")
         );
@@ -87,12 +86,10 @@ public class PostService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<PostResponseDto>> getPostList() {
         List<Post> postList = postRepository.findAll();
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>postList   " + postList.size());
         List<PostResponseDto> result = new ArrayList<>();
         for(Post post : postList){
             result.add(new PostResponseDto(post));
         }
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  " + result.size());
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<List<PostResponseDto>>(result, httpStatus);
     }
