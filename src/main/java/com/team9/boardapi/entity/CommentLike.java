@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-// CommentLike Entity
+
 @Entity
 @NoArgsConstructor
 public class CommentLike {
