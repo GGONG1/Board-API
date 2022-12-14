@@ -3,9 +3,11 @@ package com.team9.boardapi.dto;
 import com.team9.boardapi.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @NoArgsConstructor
 public class PostResponseDto {
@@ -16,6 +18,7 @@ public class PostResponseDto {
     private LocalDateTime modifiedAt;
     private String title;
     private String contents;
+    private Long likeCount = 0L;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -24,5 +27,12 @@ public class PostResponseDto {
         this.title = post.getTitle();
         this.contents = post.getContent();
     }
-
+    public PostResponseDto(Post post, Long likeCount) {
+        this.id = post.getId();
+        this.likeCount = likeCount;
+        this.createAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.title = post.getTitle();
+        this.contents = post.getContent();
+    }
 }
