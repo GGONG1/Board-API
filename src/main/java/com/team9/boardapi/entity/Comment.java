@@ -1,5 +1,6 @@
 package com.team9.boardapi.entity;
 
+import com.team9.boardapi.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,21 +16,23 @@ public class Comment extends Timestamped{
     private Long id;
 
     @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
-    private Long userId;
-
-    @Column(nullable = false)
-    private Long postId;
+    @JoinColumn(name = "postId")
+    private Long post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-//    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-//    private List<CommentLike> commentLikeList = new ArrayList<>();
+    public Comment(Long postId, CommentRequestDto commentRequestDto, User user) {
+        this.post = postId;
+        this.content = commentRequestDto.getContent();
+        this.user = user;
+    }
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.content = commentRequestDto.getContent();
+    }
 }
