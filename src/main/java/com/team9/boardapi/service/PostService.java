@@ -2,9 +2,9 @@ package com.team9.boardapi.service;
 
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
-import com.team9.boardapi.dto.ResponseDto;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.User;
+import com.team9.boardapi.repository.PostLikeRepository;
 import com.team9.boardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,21 +21,27 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    private final PostLikeRepository postLikeRepository;
 
-    public PostResponseDto createPost(PostRequestDto requestDto) {
-        Post post = new Post(requestDto);
+    // 게시글 작성
+    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
+        Post post = new Post(requestDto,user);
         postRepository.save(post);
-
         return new PostResponseDto(post);
     }
 
-    public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
-        Post post = postRepository.findById(id).orElseThrow(
+    // 게시글 수정
+    public PostResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
 
-        );
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        if(post.getUser().getId() != user.getId()){throw new IllegalArgumentException("권한이 없습니다.");}
+
         post.update(requestDto.getTitle(), requestDto.getContent());
+
         postRepository.save(post);
-        return new PostResponseDto(post);
+        Long count = postLikeRepository.countByPost_Id(id);
+        return new PostResponseDto(post, count);
     }
 
     public ResponseEntity<String> deletePost(Long id) {
@@ -70,4 +75,6 @@ public class PostService {
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<List<PostResponseDto>>(result, httpStatus);
     }
+
+
 }

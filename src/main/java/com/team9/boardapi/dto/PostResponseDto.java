@@ -17,6 +17,8 @@ public class PostResponseDto {
     private String title;
     private String contents;
 
+    private Long likeCount;
+
     public PostResponseDto(Post post) {
         this.id = post.getId();
         this.createAt = post.getCreatedAt();
@@ -24,5 +26,12 @@ public class PostResponseDto {
         this.title = post.getTitle();
         this.contents = post.getContent();
     }
-
+    public PostResponseDto(Post post, Long likeCount) {
+        this.id = post.getId();
+        this.likeCount = likeCount;
+        this.createAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.title = post.getTitle();
+        this.contents = post.getContent();
+    }
 }

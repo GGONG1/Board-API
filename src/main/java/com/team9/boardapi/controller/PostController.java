@@ -2,10 +2,11 @@ package com.team9.boardapi.controller;
 
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
-import com.team9.boardapi.dto.ResponseDto;
+import com.team9.boardapi.security.UserDetailsImpl;
 import com.team9.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,16 +37,19 @@ public class PostController {
     }
 
 
+    // 게시글 작성
     @PostMapping("")
-    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto){
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return postService.createPost(requestDto);
+        return postService.createPost(requestDto, userDetails.getUser());
     }
 
+    // 게시글 수정
     @PatchMapping("/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto){
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal
+                                      UserDetailsImpl userDetails){
 
-        return postService.updatePost(id, requestDto);
+        return postService.updatePost(id, requestDto, userDetails.getUser());
     }
 
 }
