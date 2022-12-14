@@ -18,9 +18,9 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    @JoinColumn(name = "postId")
-    private Long post;
+    @ManyToOne
+		@JoinColumn(name = "Post_Id", nullable = false)
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -36,3 +36,4 @@ public class Comment extends Timestamped{
         this.content = commentRequestDto.getContent();
     }
 }
+
