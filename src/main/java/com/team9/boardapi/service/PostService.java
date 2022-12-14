@@ -2,6 +2,7 @@ package com.team9.boardapi.service;
 
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
+import com.team9.boardapi.dto.ResponseDto;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.PostLike;
 import com.team9.boardapi.entity.User;
@@ -25,13 +26,14 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     // 게시글 작성
-    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post post = new Post(requestDto,user);
+    @Transactional
+    public void createPost(Post post) {
         postRepository.save(post);
-        return new PostResponseDto(post);
     }
 
+
     // 게시글 수정
+    @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
 
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
@@ -76,7 +78,11 @@ public class PostService {
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<List<PostResponseDto>>(result, httpStatus);
     }
-    public String insertLike(Long id, User user) {
+
+    // 좋아요 추가/삭제
+    @Transactional
+    public ResponseDto<Post> insertLike(Long id, User user) {
+
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
@@ -86,12 +92,11 @@ public class PostService {
         if (count == 0L){ // 좋아요가 존재하지 않을 때
             PostLike postLike = new PostLike(post, user);
             postLikeRepository.save(postLike);
-            return "좋아요 성공";
+            return new ResponseDto<Post>("좋아요 등록", 200, post);
         }else { // 이미 좋아요를 했을 때
             PostLike postLike = postLikeRepository.findPostLikeByPost_IdAndUserId(id, user.getId());
             postLikeRepository.deleteById(postLike.getId());
-
-            return "좋아요 삭제";
+            return new ResponseDto<Post>("좋아요 삭제", 200, post);
         }
 
 

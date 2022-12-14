@@ -1,14 +1,16 @@
 package com.team9.boardapi.entity;
 
-import com.team9.boardapi.dto.PostRequestDto;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity // DB 테이블 역할을 합니다.
 @NoArgsConstructor
 public class Post extends Timestamped{
@@ -35,18 +37,9 @@ public class Post extends Timestamped{
     private List<Comment> commentList = new ArrayList<>();
 
 
-//    @ManyToOne
-//    @JoinColumn(name = "USER_ID", nullable = false)
-//    private User user;
-
-    public Post(PostRequestDto requestDto, User user){
-        this.user = user;
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
-    }
-
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
     }
+
 }
