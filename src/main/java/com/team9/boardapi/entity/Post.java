@@ -1,6 +1,7 @@
 package com.team9.boardapi.entity;
 
-
+import com.team9.boardapi.dto.PostRequestDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,5 +42,4 @@ public class Post extends Timestamped{
         this.title = title;
         this.content = content;
     }
-
 }

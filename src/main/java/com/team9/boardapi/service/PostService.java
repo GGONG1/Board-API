@@ -3,17 +3,20 @@ package com.team9.boardapi.service;
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.dto.ResponseDto;
+import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.PostLike;
 import com.team9.boardapi.entity.User;
+import com.team9.boardapi.repository.CommentRepository;
 import com.team9.boardapi.repository.PostLikeRepository;
 import com.team9.boardapi.repository.PostRepository;
+import com.team9.boardapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +24,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
+    private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    private final PostLikeRepository postLikeRepository;
+    private final CommentService commentService;
+
+    private final CommentRepository commentRepository;
 
     // 게시글 작성
     @Transactional
@@ -47,18 +54,27 @@ public class PostService {
         return new PostResponseDto(post, count);
     }
 
+    @Transactional
     public ResponseEntity<String> deletePost(Long id) {
-
-        postRepository.delete(
-                postRepository.findById(id).orElseThrow(
-                        () -> new IllegalArgumentException("해당 글을 찾을 수 없습니다.")
-                )
+        System.out.println("삭제 시작");
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 글을 찾을 수 없습니다.")
         );
+        //게시글에 딸린 댓글들 모두 삭제(암만 생각해봐도 비효율적인거 같음..)
+//        for (Comment comment : post.getCommentList()) {
+//            commentService.deleteComment(comment.getId(), post.getUser());
+//        }
+
+        //댓글중에 해당 postId와 맺어진 댓글은 모두 삭제
+        commentRepository.deleteAllByPostId(id);
+        postLikeRepository.deleteByPostId(id);//게시글에 딸린 좋아요 삭제
+        postRepository.delete(post);//드디어 게시글 삭제
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<String>("삭제성공", httpStatus);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public ResponseEntity<PostResponseDto> getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("에러발생")
@@ -68,13 +84,15 @@ public class PostService {
         return new ResponseEntity<PostResponseDto>(postResponseDto, httpStatus);
     }
 
-    @Transactional()
+    @Transactional(readOnly = true)
     public ResponseEntity<List<PostResponseDto>> getPostList() {
         List<Post> postList = postRepository.findAll();
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>postList   " + postList.size());
         List<PostResponseDto> result = new ArrayList<>();
         for(Post post : postList){
             result.add(new PostResponseDto(post));
         }
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  " + result.size());
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<List<PostResponseDto>>(result, httpStatus);
     }

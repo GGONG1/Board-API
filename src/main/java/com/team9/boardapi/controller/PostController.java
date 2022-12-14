@@ -1,5 +1,6 @@
 package com.team9.boardapi.controller;
 
+import com.team9.boardapi.dto.LikeRequestDto;
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.dto.ResponseDto;
@@ -30,9 +31,8 @@ public class PostController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<List<PostResponseDto>> readAll(){
-
         return postService.getPostList();
     }
     @DeleteMapping ("/{id}")
