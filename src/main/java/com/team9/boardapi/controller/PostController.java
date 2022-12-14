@@ -52,4 +52,10 @@ public class PostController {
         return postService.updatePost(id, requestDto, userDetails.getUser());
     }
 
+    //게시글 좋아요
+    @PostMapping("/{id}/like")
+    public String postLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.insertLike(id, userDetails.getUser());
+    }
+
 }

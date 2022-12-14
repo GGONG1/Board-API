@@ -17,7 +17,7 @@ public class PostResponseDto {
     private String title;
     private String contents;
 
-    private Long likeCount;
+    private Long likeCount = 0L;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
