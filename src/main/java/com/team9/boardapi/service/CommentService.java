@@ -1,5 +1,7 @@
 package com.team9.boardapi.service;
 
+import com.team9.boardapi.dto.CommentRequestDto;
+import com.team9.boardapi.dto.CommentResponseDto;
 import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.CommentLike;
 import com.team9.boardapi.entity.User;
@@ -11,16 +13,47 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.swing.text.html.Option;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
+
+    //댓글 달기
+    @Transactional
+    public ResponseEntity<CommentResponseDto> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
+        Comment comment = new Comment(postId,commentRequestDto, user);
+        commentRepository.save(comment);
+
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
+        return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);
+    }
+
+    //댓글 수정
+    @Transactional
+    public ResponseEntity<CommentResponseDto> updateComment(Long id, CommentRequestDto commentRequestDto, User user) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선택한 댓글을 찾을 수 없습니다")
+        );
+
+        //사용자 권한에 따른 댓글 수정
+        UserRoleEnum userRoleEnum = user.getRole();
+
+        //댓글을 작성한 사용자와 동일한 사용자가 아닐 때, 권한이 관리자가 아닐 때
+        if(userRoleEnum != UserRoleEnum.ADMIN || !comment.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("수정을 할 수 없습니다.");
+        }
+
+        comment.update(commentRequestDto);
+
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
+        return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);
+    }
+}
+
     private final CommentLikeRepository commentLikeRepository;
 
     /*---- 댓글 삭제 ----*/

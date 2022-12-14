@@ -1,5 +1,6 @@
 package com.team9.boardapi.entity;
 
+import com.team9.boardapi.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +18,22 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Long postId;
+    @ManyToOne
+		@JoinColumn(name = "Post_Id", nullable = false)
+    private Post post;
 
-    // cascade는 왜 위험한가? 나중에 자세히 알아보자
-    // 댓글이 삭제되면 좋아요도 함께 삭제 부탁드립니다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    public Comment(Long postId, CommentRequestDto commentRequestDto, User user) {
+        this.post = postId;
+        this.content = commentRequestDto.getContent();
+        this.user = user;
+    }
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.content = commentRequestDto.getContent();
+    }
 }
+
