@@ -17,8 +17,9 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Long postId;
+    @ManyToOne
+    @JoinColumn(name = "POST_ID", nullable = false)
+    private Post post;
 
     // cascade는 왜 위험한가? 나중에 자세히 알아보자
     // 댓글이 삭제되면 좋아요도 함께 삭제 부탁드립니다.

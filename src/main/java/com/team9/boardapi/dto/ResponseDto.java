@@ -1,5 +1,8 @@
 package com.team9.boardapi.dto;
 
+import lombok.Getter;
+
+@Getter
 public class ResponseDto<T> {
     private String msg;
     private int statusCode;
