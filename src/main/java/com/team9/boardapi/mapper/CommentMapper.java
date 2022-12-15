@@ -25,6 +25,7 @@ public class CommentMapper {
 
         commentResponseDto.setId(comment.getId());
         commentResponseDto.setContent(comment.getContent());
+        commentResponseDto.setLikeCount(comment.getLikeCount());
         commentResponseDto.setUsername(user.getUsername());
         commentResponseDto.setCreatedAt(comment.getCreatedAt());
         commentResponseDto.setModifiedAt(comment.getModifiedAt());
