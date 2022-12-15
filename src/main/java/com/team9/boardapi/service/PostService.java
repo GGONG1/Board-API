@@ -7,6 +7,8 @@ import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.PostLike;
 import com.team9.boardapi.entity.User;
 import com.team9.boardapi.entity.UserRoleEnum;
+import com.team9.boardapi.exception.CustomException;
+import com.team9.boardapi.exception.ErrorCode;
 import com.team9.boardapi.mapper.PostMapper;
 import com.team9.boardapi.repository.CommentRepository;
 import com.team9.boardapi.repository.PostLikeRepository;
@@ -52,7 +54,7 @@ public class PostService {
         UserRoleEnum userRoleEnum = user.getRole();
 
         if(userRoleEnum != UserRoleEnum.ADMIN && !post.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new CustomException(ErrorCode.AUTHORIZATION_UPDATE_FAIL);
         }
 
         post.update(requestDto.getTitle(), requestDto.getContent());
@@ -69,11 +71,11 @@ public class PostService {
 
 
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 글을 찾을 수 없습니다.")
+                () ->  new CustomException(ErrorCode.CONTENT_NOT_FOUND)
         );
 
         if (!post.getUser().getId().equals(user.getId()) && userRoleEnum != UserRoleEnum.ADMIN) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            throw new CustomException(ErrorCode.AUTHORIZATION_DELETE_FAIL);
         }
 //        for (Comment comment : post.getCommentList()) {
 //            commentService.deleteComment(comment.getId(), post.getUser());
@@ -84,14 +86,14 @@ public class PostService {
         postLikeRepository.deleteByPostId(id);//게시글에 달린 좋아요 삭제
         postRepository.delete(post);//게시글 삭제
         HttpStatus httpStatus = HttpStatus.OK;
-        return new ResponseEntity<String>("삭제성공", httpStatus);
+        return new ResponseEntity<String>("게시글 삭제 성공하였습니다.", httpStatus);
     }
 
 
     @Transactional(readOnly = true)
     public ResponseEntity<PostResponseDto> getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("에러발생")
+                () ->  new CustomException(ErrorCode.CONTENT_NOT_FOUND)
         );//post 글 하나 읽어와서 조회
 
         PostResponseDto postResponseDto = new PostResponseDto(post, postLikeRepository.countByPost_Id(id));
@@ -115,7 +117,7 @@ public class PostService {
     public ResponseDto insertLike(Long id, User user) {
 
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () ->  new CustomException(ErrorCode.CONTENT_NOT_FOUND)
         );
 
         Optional<PostLike> like = postLikeRepository.findPostLikeByPost_IdAndUserId(id, user.getId());
