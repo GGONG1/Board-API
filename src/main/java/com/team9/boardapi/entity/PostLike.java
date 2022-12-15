@@ -26,5 +26,5 @@ public class PostLike {
         this.user = user;
         this.post = post;
     }
-
 }
+

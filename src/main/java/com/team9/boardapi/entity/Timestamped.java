@@ -16,8 +16,10 @@ import java.time.LocalDateTime;
 public class Timestamped {
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column
     private LocalDateTime modifiedAt;
 }

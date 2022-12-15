@@ -5,6 +5,7 @@ import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.User;
 import org.springframework.stereotype.Component;
+
 @Component
 public class PostMapper {
     public Post toEntity(PostRequestDto requestDto, User user){
