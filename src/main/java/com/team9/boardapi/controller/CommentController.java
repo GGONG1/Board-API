@@ -23,7 +23,7 @@ public class CommentController {
     }
 
     //댓글 수정
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(id, commentRequestDto, userDetails.getUser());
     }
