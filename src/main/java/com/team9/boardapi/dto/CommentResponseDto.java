@@ -4,10 +4,12 @@ import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class CommentResponseDto {
 
@@ -24,7 +26,6 @@ public class CommentResponseDto {
         this.username = user.getUsername();
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
-
     }
 
     public CommentResponseDto(Comment comment) {
@@ -35,3 +36,4 @@ public class CommentResponseDto {
         this.modifiedAt = comment.getModifiedAt();
     }
 }
+

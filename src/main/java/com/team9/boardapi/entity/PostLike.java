@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
-@Getter
 public class PostLike {
 
     @Id
@@ -21,10 +20,9 @@ public class PostLike {
     @ManyToOne
     @JoinColumn(name = "Post_ID", nullable = false)
     private Post post;
-
+    
     public PostLike(Post post, User user) {
         this.user = user;
         this.post = post;
     }
 }
-

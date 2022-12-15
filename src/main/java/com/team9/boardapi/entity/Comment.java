@@ -1,13 +1,14 @@
 package com.team9.boardapi.entity;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends Timestamped{
 
     @Id
@@ -18,12 +19,21 @@ public class Comment extends Timestamped{
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "POST_ID", nullable = false)
+    @JoinColumn(name = "Post_Id", nullable = false)
     private Post post;
 
-    // cascade는 왜 위험한가? 나중에 자세히 알아보자
-    // 댓글이 삭제되면 좋아요도 함께 삭제 부탁드립니다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    @Builder
+    public Comment(Post post, String content, User user) {
+        this.post = post;
+        this.content = content;
+        this.user = user;
+    }
+
+    public void update(String content) {
+        this.content = content;
+    }
 }
