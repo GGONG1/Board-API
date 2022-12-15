@@ -6,6 +6,7 @@ import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.User;
 import com.team9.boardapi.entity.UserRoleEnum;
+import com.team9.boardapi.mapper.CommentMapper;
 import com.team9.boardapi.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final CommentMapper commentMapper;
 
     //댓글 달기
     @Transactional
@@ -28,11 +30,12 @@ public class CommentService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
-        Comment comment = new Comment(post,commentRequestDto, user);
+
+        Comment comment = commentMapper.toEntity(commentRequestDto, user);
         commentRepository.save(comment);
 
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
-        return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);
+        CommentResponseDto response = commentMapper.commentToCommentResponseDto(comment, user);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     //댓글 수정
@@ -50,7 +53,7 @@ public class CommentService {
             throw new IllegalArgumentException("수정을 할 수 없습니다.");
         }
 
-        comment.update(commentRequestDto);
+        comment.update(commentRequestDto.getContent());
 
         CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
         return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);

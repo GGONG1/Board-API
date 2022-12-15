@@ -1,14 +1,14 @@
 package com.team9.boardapi.entity;
 
-import com.team9.boardapi.dto.CommentRequestDto;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends Timestamped{
 
     @Id
@@ -26,15 +26,14 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    public Comment(Post post ,CommentRequestDto commentRequestDto, User user) {
+    @Builder
+    public Comment(Post post, String content, User user) {
         this.post = post;
-        this.content = commentRequestDto.getContent();
+        this.content = content;
         this.user = user;
     }
 
-
-
-    public void update(CommentRequestDto commentRequestDto) {
-        this.content = commentRequestDto.getContent();
+    public void update(String content) {
+        this.content = content;
     }
 }

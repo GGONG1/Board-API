@@ -17,14 +17,13 @@ public class CommentController {
     private final CommentService commentService;
 
     //댓글 등록
-//    @Secured(UserRoleEnum.Authority.ADMIN)
     @PostMapping("{postId}")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.createComment(postId,commentRequestDto, userDetails.getUser());
     }
 
     //댓글 수정
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(id, commentRequestDto, userDetails.getUser());
     }
