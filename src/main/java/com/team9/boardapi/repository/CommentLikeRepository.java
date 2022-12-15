@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
     Optional<CommentLike> findByUser_ID(Long user_id);
+
+    void deleteAllByComment_Id(Long comment_id);
 }

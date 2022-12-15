@@ -21,8 +21,8 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-
-    //댓글 달기
+    private final CommentLikeRepository commentLikeRepository;
+    /*---- 댓글 생성 ----*/
     @Transactional
     public ResponseEntity<CommentResponseDto> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = new Comment(postId,commentRequestDto, user);
@@ -32,7 +32,7 @@ public class CommentService {
         return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);
     }
 
-    //댓글 수정
+    /*---- 댓글 수정 ----*/
     @Transactional
     public ResponseEntity<CommentResponseDto> updateComment(Long id, CommentRequestDto commentRequestDto, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(
@@ -43,7 +43,7 @@ public class CommentService {
         UserRoleEnum userRoleEnum = user.getRole();
 
         //댓글을 작성한 사용자와 동일한 사용자가 아닐 때, 권한이 관리자가 아닐 때
-        if(userRoleEnum != UserRoleEnum.ADMIN || !comment.getUser().getId().equals(user.getId())) {
+        if(userRoleEnum != UserRoleEnum.ADMIN && !comment.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("수정을 할 수 없습니다.");
         }
 
@@ -52,9 +52,6 @@ public class CommentService {
         CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
         return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);
     }
-}
-
-    private final CommentLikeRepository commentLikeRepository;
 
     /*---- 댓글 삭제 ----*/
     @Transactional
@@ -66,15 +63,18 @@ public class CommentService {
         UserRoleEnum userRoleEnum = user.getRole();
 
         // 댓글을 작성한 유저가 아닐 때, 혹은 관리자가 아닐 때 Exception
-        if (!comment.getUser().getId().equals(user.getId()) || userRoleEnum != UserRoleEnum.ADMIN) {
+        if(userRoleEnum != UserRoleEnum.ADMIN && !comment.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
 
-        // 입력된 id의 게시물을 삭제
+        // 입력된 댓글 id의 좋아요 모두 삭제
+        commentLikeRepository.deleteAllByComment_Id(commentId);
+
+        // 입력된 commentId를 가진 댓글 삭제
         commentRepository.deleteById(commentId);
 
         // 결과 반환
-        return new ResponseEntity<String>("게시물 삭제 성공", HttpStatus.OK);
+        return new ResponseEntity<String>("댓글 삭제 성공", HttpStatus.OK);
     }
 
     /*---- 댓글 좋아요 등록/취소 ----*/
