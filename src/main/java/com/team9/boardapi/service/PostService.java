@@ -29,11 +29,8 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-
     private final CommentService commentService;
-
     private final CommentRepository commentRepository;
-
     private final PostMapper mapper;
 
     // 게시글 작성
@@ -42,7 +39,7 @@ public class PostService {
 
         Post post = mapper.toEntity(requestDto, user);
         postRepository.save(post);
-        PostResponseDto response = mapper.postToPosetResponseDto(post);
+        PostResponseDto response = mapper.postToPostResponseDto(post);
 
         return response;
     }

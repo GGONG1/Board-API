@@ -1,6 +1,5 @@
 package com.team9.boardapi.controller;
 
-import com.team9.boardapi.dto.LikeRequestDto;
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.dto.ResponseDto;
@@ -21,24 +20,21 @@ public class PostController {
 
     private final PostService postService;
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> read(@PathVariable Long id){
         return postService.getPost(id);
     }
 
-
     @GetMapping("/list")
     public ResponseEntity<List<PostResponseDto>> readAll(){
         return postService.getPostList();
     }
+
     @DeleteMapping ("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id){
+    public ResponseEntity<String> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return postService.deletePost(id);
+        return postService.deletePost(id, userDetails.getUser());
     }
-
 
     // 게시글 작성
     @PostMapping("")

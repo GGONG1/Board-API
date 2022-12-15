@@ -13,6 +13,7 @@ import com.team9.boardapi.entity.UserRoleEnum;
 import com.team9.boardapi.mapper.CommentMapper;
 import com.team9.boardapi.repository.CommentLikeRepository;
 import com.team9.boardapi.repository.CommentRepository;
+import com.team9.boardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
 
-        Comment comment = commentMapper.toEntity(commentRequestDto, user);
+        Comment comment = commentMapper.toEntity(commentRequestDto, user, post);
         commentRepository.save(comment);
 
         CommentResponseDto response = commentMapper.commentToCommentResponseDto(comment, user);
@@ -93,7 +94,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
         );
-        Optional<CommentLike> like = commentLikeRepository.findByUser_ID(user.getId());
+        Optional<CommentLike> like = commentLikeRepository.findByUser_Id(user.getId());
 
         if (like.isPresent()) { // 이미 좋아요가 존재할 때
             CommentLike selectedLike = like.get();
