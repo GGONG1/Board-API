@@ -6,6 +6,7 @@ import com.team9.boardapi.dto.ResponseDto;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.PostLike;
 import com.team9.boardapi.entity.User;
+import com.team9.boardapi.entity.UserRoleEnum;
 import com.team9.boardapi.mapper.PostMapper;
 import com.team9.boardapi.repository.PostLikeRepository;
 import com.team9.boardapi.repository.PostRepository;
@@ -46,12 +47,17 @@ public class PostService {
 
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        if(post.getUser().getId() != user.getId()){throw new IllegalArgumentException("권한이 없습니다.");}
+        UserRoleEnum userRoleEnum = user.getRole();
+
+        if(userRoleEnum != UserRoleEnum.ADMIN && !post.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
 
         post.update(requestDto.getTitle(), requestDto.getContent());
 
         postRepository.save(post);
         Long count = postLikeRepository.countByPost_Id(id);
+
         return new PostResponseDto(post, count);
     }
 
