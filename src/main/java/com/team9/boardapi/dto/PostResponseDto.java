@@ -21,15 +21,24 @@ public class PostResponseDto {
     private LocalDateTime modifiedAt;
     private String title;
     private String contents;
-
-    private String username;
     private Long likeCount = 0L;
 
     /*
         순환 참조를 막기 위해 List 제네릭 자료형을 Entity 대신 DTO로 변경
      */
     private List<CommentResponseDto> comments = new ArrayList<>();
-    
+
+    public PostResponseDto(Post post) {
+        this.id = post.getId();
+        this.createAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.title = post.getTitle();
+        this.contents = post.getContent();
+        for (Comment comment:post.getCommentList() ) {
+            this.comments.add(new CommentResponseDto(comment));
+        }
+
+    }
     public PostResponseDto(Post post, Long likeCount) {
         this.id = post.getId();
         this.likeCount = likeCount;
@@ -37,7 +46,6 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.title = post.getTitle();
         this.contents = post.getContent();
-        this.username = post.getUser().getUsername();
         for (Comment comment:post.getCommentList() ) {
             this.comments.add(new CommentResponseDto(comment));
         }

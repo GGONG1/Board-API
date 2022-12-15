@@ -26,7 +26,6 @@ public class PostMapper {
         postResponseDto.setContents(post.getTitle());
         postResponseDto.setCreateAt(post.getCreatedAt());
         postResponseDto.setModifiedAt(post.getModifiedAt());
-        postResponseDto.setUsername(post.getUser().getUsername());
 
         return postResponseDto;
     }

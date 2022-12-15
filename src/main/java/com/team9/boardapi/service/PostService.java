@@ -27,7 +27,9 @@ import java.util.Optional;
 public class PostService {
 
     private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CommentService commentService;
     private final CommentRepository commentRepository;
     private final PostMapper mapper;
 
@@ -93,8 +95,7 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("에러발생")
         );//post 글 하나 읽어와서 조회
-
-        PostResponseDto postResponseDto = new PostResponseDto(post, postLikeRepository.countByPost_Id(id));
+        PostResponseDto postResponseDto = new PostResponseDto(post);
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<PostResponseDto>(postResponseDto, httpStatus);
     }
@@ -104,7 +105,7 @@ public class PostService {
         List<Post> postList = postRepository.findAll();
         List<PostResponseDto> result = new ArrayList<>();
         for(Post post : postList){
-            result.add(new PostResponseDto(post, postLikeRepository.countByPost_Id(post.getId())));
+            result.add(new PostResponseDto(post));
         }
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<List<PostResponseDto>>(result, httpStatus);
