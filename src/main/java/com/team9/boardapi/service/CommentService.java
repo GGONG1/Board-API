@@ -90,6 +90,7 @@ public class CommentService {
     }
 
     /*---- 댓글 좋아요 등록/취소 ----*/
+    @Transactional
     public ResponseEntity<String> like(long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
@@ -100,10 +101,12 @@ public class CommentService {
             CommentLike selectedLike = like.get();
             // 좋아요를 삭제
             commentLikeRepository.delete(selectedLike);
+            comment.unlike();
             return new ResponseEntity<String>("좋아요를 취소하였습니다.", HttpStatus.OK);
         } else { // 좋아요가 존재하지 않을 때
             CommentLike newLike = new CommentLike(user, comment);
             // 좋아요를 등록(저장)
+            comment.like();
             commentLikeRepository.save(newLike);
             return new ResponseEntity<String>("좋아요를 등록했습니다.", HttpStatus.OK);
         }
