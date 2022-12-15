@@ -6,6 +6,7 @@ import com.team9.boardapi.dto.ResponseDto;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.PostLike;
 import com.team9.boardapi.entity.User;
+import com.team9.boardapi.mapper.PostMapper;
 import com.team9.boardapi.repository.PostLikeRepository;
 import com.team9.boardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,17 @@ public class PostService {
 
     private final PostLikeRepository postLikeRepository;
 
+    private final PostMapper mapper;
+
     // 게시글 작성
     @Transactional
-    public void createPost(Post post) {
+    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
+
+        Post post = mapper.toEntity(requestDto, user);
         postRepository.save(post);
+        PostResponseDto response = mapper.postToPosetResponseDto(post);
+
+        return response;
     }
 
 
@@ -101,6 +109,7 @@ public class PostService {
 
 
     }
+
 
 
 }

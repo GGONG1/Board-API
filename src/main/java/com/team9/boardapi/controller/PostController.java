@@ -4,11 +4,9 @@ import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.dto.ResponseDto;
 import com.team9.boardapi.entity.Post;
-import com.team9.boardapi.mapper.PostMapper;
 import com.team9.boardapi.security.UserDetailsImpl;
 import com.team9.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ public class PostController {
 
     private final PostService postService;
 
-    private final PostMapper mapper;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> read(@PathVariable Long id){
@@ -44,12 +42,9 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("")
-    public ResponseEntity createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        Post post = mapper.PostDtoToPost(requestDto,userDetails.getUser());
-        postService.createPost(post);
-        PostResponseDto response = mapper.postToPosetResponseDto(post);
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return postService.createPost(requestDto, userDetails.getUser());
     }
 
     // 게시글 수정

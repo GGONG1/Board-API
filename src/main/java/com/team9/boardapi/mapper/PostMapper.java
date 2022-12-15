@@ -5,19 +5,19 @@ import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.User;
 import org.springframework.stereotype.Component;
-
 @Component
 public class PostMapper {
-    public Post PostDtoToPost(PostRequestDto postRequestDto, User user) {
-        Post post = new Post();
-        post.setId(postRequestDto.getId());
-        post.setTitle(postRequestDto.getTitle());
-        post.setContent(postRequestDto.getTitle());
-        post.setUser(user);
-        return post;
+    public Post toEntity(PostRequestDto requestDto, User user){
+
+        return Post.builder()
+                .id(requestDto.getId())
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .user(user)
+                .build();
     }
 
-    // Member -> MemberResponseDto
+
     public PostResponseDto postToPosetResponseDto(Post post) {
         PostResponseDto postResponseDto = new PostResponseDto();
 
