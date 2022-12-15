@@ -17,7 +17,6 @@ public class CommentController {
     private final CommentService commentService;
 
     //댓글 등록
-//    @Secured(UserRoleEnum.Authority.ADMIN)
     @PostMapping("{postId}")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.createComment(postId,commentRequestDto, userDetails.getUser());
@@ -29,4 +28,15 @@ public class CommentController {
         return commentService.updateComment(id, commentRequestDto, userDetails.getUser());
     }
 
+    // 댓글 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.deleteComment(id, userDetails.getUser());
+    }
+
+    // 댓글 좋아요 / 좋아요 취소
+    @PostMapping("/like/{id}")
+    public ResponseEntity<String> likeComment(@PathVariable long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.like(id, userDetails.getUser());
+    }
 }
