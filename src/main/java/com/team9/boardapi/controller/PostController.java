@@ -34,9 +34,9 @@ public class PostController {
         return postService.getPostList();
     }
     @DeleteMapping ("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id){
+    public ResponseEntity<String> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return postService.deletePost(id);
+        return postService.deletePost(id, userDetails.getUser());
     }
 
 
