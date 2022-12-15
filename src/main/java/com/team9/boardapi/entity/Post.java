@@ -1,5 +1,6 @@
 package com.team9.boardapi.entity;
 
+
 import com.team9.boardapi.dto.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Entity // DB 테이블 역할을 합니다.
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Post extends Timestamped{
 
