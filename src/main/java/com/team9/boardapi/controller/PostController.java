@@ -3,7 +3,6 @@ package com.team9.boardapi.controller;
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.dto.ResponseDto;
-import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.security.UserDetailsImpl;
 import com.team9.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +52,7 @@ public class PostController {
 
     //게시글 좋아요
     @PostMapping("/{id}/like")
-    public ResponseDto<Post> postLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseDto postLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.insertLike(id, userDetails.getUser());
     }
 

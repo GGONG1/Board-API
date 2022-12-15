@@ -3,14 +3,12 @@ package com.team9.boardapi.dto;
 import lombok.Getter;
 
 @Getter
-public class ResponseDto<T> {
+public class ResponseDto {
     private String msg;
     private int statusCode;
-    private T data;
 
-    public ResponseDto(String msg, int statusCode, T data){
+    public ResponseDto(String msg, int statusCode){
         this.msg = msg;
         this.statusCode = statusCode;
-        this.data = data;
     }
 }

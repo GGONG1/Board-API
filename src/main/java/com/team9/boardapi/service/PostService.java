@@ -112,7 +112,7 @@ public class PostService {
 
     // 좋아요 추가/삭제
     @Transactional
-    public ResponseDto<Post> insertLike(Long id, User user) {
+    public ResponseDto insertLike(Long id, User user) {
 
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
@@ -125,13 +125,13 @@ public class PostService {
 
             postLikeRepository.delete(postLike);
 
-            return new ResponseDto<Post>("좋아요 취소", 200, post);
+            return new ResponseDto("좋아요 취소", HttpStatus.OK.value());
 
         }else { // 좋아요가 존재하지 않을 때
             PostLike postLike = new PostLike(post, user);
 
             postLikeRepository.save(postLike);
-            return new ResponseDto<Post>("좋아요 등록", 200, post);
+            return new ResponseDto("좋아요 등록", HttpStatus.OK.value());
         }
     }
 
