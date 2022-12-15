@@ -51,7 +51,7 @@ public class PostController {
     }
 
     //게시글 좋아요
-    @GetMapping("/{id}/like")
+    @PostMapping("/{id}/like")
     public ResponseDto postLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.insertLike(id, userDetails.getUser());
     }
