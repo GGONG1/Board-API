@@ -1,9 +1,16 @@
 package com.team9.boardapi.service;
 
+
+import com.team9.boardapi.dto.CommentRequestDto;
+import com.team9.boardapi.dto.CommentResponseDto;
+import com.team9.boardapi.entity.Comment;
+import com.team9.boardapi.entity.Post;
+
 import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.CommentLike;
 import com.team9.boardapi.entity.User;
 import com.team9.boardapi.entity.UserRoleEnum;
+import com.team9.boardapi.mapper.CommentMapper;
 import com.team9.boardapi.repository.CommentLikeRepository;
 import com.team9.boardapi.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,17 +18,51 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.html.Option;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final CommentMapper commentMapper;
     private final CommentLikeRepository commentLikeRepository;
+
+    /*---- 댓글 생성 ----*/
+    @Transactional
+    public ResponseEntity<CommentResponseDto> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다")
+        );
+
+        Comment comment = commentMapper.toEntity(commentRequestDto, user);
+        commentRepository.save(comment);
+
+        CommentResponseDto response = commentMapper.commentToCommentResponseDto(comment, user);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    /*---- 댓글 수정 ----*/
+    @Transactional
+    public ResponseEntity<CommentResponseDto> updateComment(Long id, CommentRequestDto commentRequestDto, User user) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선택한 댓글을 찾을 수 없습니다")
+        );
+
+        //사용자 권한에 따른 댓글 수정
+        UserRoleEnum userRoleEnum = user.getRole();
+
+        //댓글을 작성한 사용자와 동일한 사용자가 아닐 때, 권한이 관리자가 아닐 때
+        if(userRoleEnum != UserRoleEnum.ADMIN && !comment.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("수정을 할 수 없습니다.");
+        }
+
+        comment.update(commentRequestDto.getContent());
+
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
+        return new ResponseEntity<>(commentResponseDto,HttpStatus.OK);
+    }
 
     /*---- 댓글 삭제 ----*/
     @Transactional
@@ -33,15 +74,18 @@ public class CommentService {
         UserRoleEnum userRoleEnum = user.getRole();
 
         // 댓글을 작성한 유저가 아닐 때, 혹은 관리자가 아닐 때 Exception
-        if (!comment.getUser().getId().equals(user.getId()) || userRoleEnum != UserRoleEnum.ADMIN) {
+        if(userRoleEnum != UserRoleEnum.ADMIN && !comment.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
 
-        // 입력된 id의 게시물을 삭제
+        // 입력된 댓글 id의 좋아요 모두 삭제
+        commentLikeRepository.deleteAllByComment_Id(commentId);
+
+        // 입력된 commentId를 가진 댓글 삭제
         commentRepository.deleteById(commentId);
 
         // 결과 반환
-        return new ResponseEntity<String>("게시물 삭제 성공", HttpStatus.OK);
+        return new ResponseEntity<String>("댓글 삭제 성공", HttpStatus.OK);
     }
 
     /*---- 댓글 좋아요 등록/취소 ----*/
