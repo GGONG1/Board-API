@@ -3,6 +3,7 @@ package com.team9.boardapi.service;
 import com.team9.boardapi.dto.CommentRequestDto;
 import com.team9.boardapi.dto.CommentResponseDto;
 import com.team9.boardapi.entity.Comment;
+import com.team9.boardapi.entity.Post;
 import com.team9.boardapi.entity.CommentLike;
 import com.team9.boardapi.entity.User;
 import com.team9.boardapi.entity.UserRoleEnum;
@@ -21,11 +22,16 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
     private final CommentLikeRepository commentLikeRepository;
+
     /*---- 댓글 생성 ----*/
     @Transactional
     public ResponseEntity<CommentResponseDto> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
-        Comment comment = new Comment(postId,commentRequestDto, user);
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다")
+        );
+        Comment comment = new Comment(post,commentRequestDto, user);
         commentRepository.save(comment);
 
         CommentResponseDto commentResponseDto = new CommentResponseDto(comment, user);
