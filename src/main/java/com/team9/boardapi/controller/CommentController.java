@@ -27,5 +27,16 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(id, commentRequestDto, userDetails.getUser());
     }
+    
+    // 댓글 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.deleteComment(id, userDetails.getUser());
+    }
 
+    // 댓글 좋아요 / 좋아요 취소
+    @PostMapping("/like/{id}")
+    public ResponseEntity<String> likeComment(@PathVariable long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.like(id, userDetails.getUser());
+    }
 }

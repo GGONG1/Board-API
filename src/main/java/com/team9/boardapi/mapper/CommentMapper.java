@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentMapper {
     //CommentRequestDto -> Comment
-    public Comment toEntity(CommentRequestDto commentRequestDto, User user) {
+    public Comment toEntity(CommentRequestDto commentRequestDto, User user, Post post) {
         return Comment.builder()
                 .content(commentRequestDto.getContent())
                 .user(user)
+                .post(post)
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class CommentMapper {
 
         commentResponseDto.setId(comment.getId());
         commentResponseDto.setContent(comment.getContent());
+        commentResponseDto.setLikeCount(comment.getLikeCount());
         commentResponseDto.setUsername(user.getUsername());
         commentResponseDto.setCreatedAt(comment.getCreatedAt());
         commentResponseDto.setModifiedAt(comment.getModifiedAt());
