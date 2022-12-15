@@ -126,13 +126,13 @@ public class PostService {
 
             postLikeRepository.delete(postLike);
 
-            return new ResponseDto("좋아요 취소", 200);
+            return new ResponseDto("좋아요 취소", HttpStatus.OK.value());
 
         }else { // 좋아요가 존재하지 않을 때
             PostLike postLike = new PostLike(post, user);
 
             postLikeRepository.save(postLike);
-            return new ResponseDto("좋아요 등록", 200);
+            return new ResponseDto("좋아요 등록", HttpStatus.OK.value());
         }
     }
 
