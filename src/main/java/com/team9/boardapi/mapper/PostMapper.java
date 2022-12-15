@@ -11,7 +11,6 @@ public class PostMapper {
     public Post toEntity(PostRequestDto requestDto, User user){
 
         return Post.builder()
-                .id(requestDto.getId())
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .user(user)
@@ -19,7 +18,7 @@ public class PostMapper {
     }
 
 
-    public PostResponseDto postToPosetResponseDto(Post post) {
+    public PostResponseDto postToPostResponseDto(Post post) {
         PostResponseDto postResponseDto = new PostResponseDto();
 
         postResponseDto.setId(post.getId());
