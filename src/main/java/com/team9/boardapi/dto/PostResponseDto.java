@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -22,7 +23,10 @@ public class PostResponseDto {
     private String contents;
     private Long likeCount = 0L;
 
-    private List<Comment> comments;
+    /*
+        순환 참조를 막기 위해 List 제네릭 자료형을 Entity 대신 DTO로 변경
+     */
+    private List<CommentResponseDto> comments = new ArrayList<>();
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -30,7 +34,10 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.title = post.getTitle();
         this.contents = post.getContent();
-        this.comments = post.getCommentList();
+        for (Comment comment:post.getCommentList() ) {
+            this.comments.add(new CommentResponseDto(comment));
+        }
+
     }
     public PostResponseDto(Post post, Long likeCount) {
         this.id = post.getId();
@@ -39,6 +46,8 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.title = post.getTitle();
         this.contents = post.getContent();
-        this.comments = post.getCommentList();
+        for (Comment comment:post.getCommentList() ) {
+            this.comments.add(new CommentResponseDto(comment));
+        }
     }
 }

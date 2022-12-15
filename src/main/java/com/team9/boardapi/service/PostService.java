@@ -3,10 +3,7 @@ package com.team9.boardapi.service;
 import com.team9.boardapi.dto.PostRequestDto;
 import com.team9.boardapi.dto.PostResponseDto;
 import com.team9.boardapi.dto.ResponseDto;
-import com.team9.boardapi.entity.Comment;
-import com.team9.boardapi.entity.Post;
-import com.team9.boardapi.entity.PostLike;
-import com.team9.boardapi.entity.User;
+import com.team9.boardapi.entity.*;
 import com.team9.boardapi.repository.CommentRepository;
 import com.team9.boardapi.repository.PostLikeRepository;
 import com.team9.boardapi.repository.PostRepository;
@@ -55,20 +52,25 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<String> deletePost(Long id) {
-        System.out.println("삭제 시작");
+    public ResponseEntity<String> deletePost(Long id, User user) {
+        UserRoleEnum userRoleEnum = user.getRole();
+
+
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 글을 찾을 수 없습니다.")
         );
-        //게시글에 딸린 댓글들 모두 삭제(암만 생각해봐도 비효율적인거 같음..)
+
+        if (!post.getUser().getId().equals(user.getId()) && userRoleEnum != UserRoleEnum.ADMIN) {
+            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        }
 //        for (Comment comment : post.getCommentList()) {
 //            commentService.deleteComment(comment.getId(), post.getUser());
 //        }
 
         //댓글중에 해당 postId와 맺어진 댓글은 모두 삭제
         commentRepository.deleteAllByPostId(id);
-        postLikeRepository.deleteByPostId(id);//게시글에 딸린 좋아요 삭제
-        postRepository.delete(post);//드디어 게시글 삭제
+        postLikeRepository.deleteByPostId(id);//게시글에 달린 좋아요 삭제
+        postRepository.delete(post);//게시글 삭제
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<String>("삭제성공", httpStatus);
     }
@@ -87,12 +89,10 @@ public class PostService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<PostResponseDto>> getPostList() {
         List<Post> postList = postRepository.findAll();
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>postList   " + postList.size());
         List<PostResponseDto> result = new ArrayList<>();
         for(Post post : postList){
             result.add(new PostResponseDto(post));
         }
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  " + result.size());
         HttpStatus httpStatus = HttpStatus.OK;
         return new ResponseEntity<List<PostResponseDto>>(result, httpStatus);
     }
@@ -116,9 +116,5 @@ public class PostService {
             postLikeRepository.deleteById(postLike.getId());
             return new ResponseDto<Post>("좋아요 삭제", 200, post);
         }
-
-
     }
-
-
 }
