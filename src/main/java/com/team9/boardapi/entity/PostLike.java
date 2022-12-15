@@ -1,5 +1,6 @@
 package com.team9.boardapi.entity;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -19,4 +20,9 @@ public class PostLike {
     @ManyToOne
     @JoinColumn(name = "Post_ID", nullable = false)
     private Post post;
+    
+    public PostLike(Post post, User user) {
+        this.user = user;
+        this.post = post;
+    }
 }

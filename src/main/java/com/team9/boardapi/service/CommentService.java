@@ -1,9 +1,12 @@
 package com.team9.boardapi.service;
 
+
 import com.team9.boardapi.dto.CommentRequestDto;
 import com.team9.boardapi.dto.CommentResponseDto;
 import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.Post;
+
+import com.team9.boardapi.entity.Comment;
 import com.team9.boardapi.entity.CommentLike;
 import com.team9.boardapi.entity.User;
 import com.team9.boardapi.entity.UserRoleEnum;
@@ -14,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service

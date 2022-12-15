@@ -32,10 +32,7 @@ public class Comment extends Timestamped{
         this.user = user;
     }
 
-
-
     public void update(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
     }
 }
-

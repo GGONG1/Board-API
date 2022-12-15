@@ -1,7 +1,6 @@
 package com.team9.boardapi.entity;
 
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity
